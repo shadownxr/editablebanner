@@ -120,7 +120,15 @@ class EditableBanner extends Module
     }
 
     public function hookDisplayBanner(){
+        $config = $this->getConfigValues();
 
+        $this->context->smarty->assign(
+            array(
+                'banner_text' => $config['banner_text'],
+                'is_visible' => $config['is_visible']
+            ),
+        );
+        return $this->context->smarty->fetch($this->local_path.'views/templates/front/banner.tpl');
     }
 
     public function getContent()
@@ -177,7 +185,7 @@ class EditableBanner extends Module
                                 'label' => $this->l('Yes'),
                             ),
                             array(
-                                'id' => 'label2_off',
+                                'id' => 'is_visible_off',
                                 'value' => false,
                                 'label' => $this->l('No')
                             ),
@@ -202,7 +210,7 @@ class EditableBanner extends Module
     protected function postProcess()
     {
         $banner_text = Tools::getValue('banner_text');
-        $is_visible = Tools::getValue('is_visible');
+        $is_visible = (bool)Tools::getValue('is_visible');
 
         $config = new EditableBannerConfig($this->id_config);
         $config->banner_text = $banner_text;
