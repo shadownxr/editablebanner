@@ -55,7 +55,6 @@ class EditableBanner extends Module
             && $this->installTable()
             && $this->initTable()
             && $this->registerHook('displayBanner')
-            && $this->registerHook('actionFrontControllerSetMedia')
         );
     }
 
@@ -78,7 +77,7 @@ class EditableBanner extends Module
             foreach (Language::getLanguages(true) as $lang) {
                 $tab->name[$lang['id_lang']] = $this->displayName;
             }
-            $tab->class_name = 'AdminEditableBannerSettings';
+            $tab->class_name = 'AdminEditableBannerConfigShortcut';
             $tab->module = $this->name;
             $tab->active = 1;
         }
@@ -87,7 +86,7 @@ class EditableBanner extends Module
 
     public function uninstallTab()
     {
-        $id_tab = (int)Tab::getIdFromClassName('AdminEditableBannerSettings');
+        $id_tab = (int)Tab::getIdFromClassName('AdminEditableBannerConfigShortcut');
         $tab = new Tab((int)$id_tab);
         return $tab->delete();
     }
@@ -111,10 +110,8 @@ class EditableBanner extends Module
 
     public function initTable(){
         $config = new EditableBannerConfig($this->id_config);
-        //var_dump($config);
         $config->is_visible = true;
-        $config->banner_text = 'Sample Text';
-        $config->add();
+        $config->banner_text = '<p>Sample Text</p>';
 
         return (bool)$config->add();
     }
@@ -157,7 +154,7 @@ class EditableBanner extends Module
         $helper->token = Tools::getAdminTokenLite('AdminModules');
 
         $helper->tpl_vars = array(
-            'fields_value' => $this->getConfigValues(), /* Add values for your inputs */
+            'fields_value' => $this->getConfigValues(),
             'languages' => $this->context->controller->getLanguages(),
             'id_language' => $this->context->language->id,
         );
