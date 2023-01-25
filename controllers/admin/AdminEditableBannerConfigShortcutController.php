@@ -19,8 +19,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-
-class AdminEditableBannerSettingsController extends ModuleAdminController {
+class AdminEditableBannerConfigShortcutController extends ModuleAdminController {
     public function __construct(){        
         $token = Tools::getAdminTokenLite('AdminModules');
 		parent::__construct();
