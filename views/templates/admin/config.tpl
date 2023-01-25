@@ -1,0 +1,1 @@
+<textarea class="rte" id="id" name="name" rows="10" cols="45"></textarea>
