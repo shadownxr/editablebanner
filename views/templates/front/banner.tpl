@@ -1,5 +1,5 @@
 {if $is_visible == true}
-<div>
-    {$banner_text nofilter}
-</div>
+    <div class='shipping-info'>
+        {$banner_text nofilter}
+    </div>
 {/if}
