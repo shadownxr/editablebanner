@@ -21,11 +21,10 @@ if (!defined('_PS_VERSION_')) {
 
 
 class AdminEditableBannerSettingsController extends ModuleAdminController {
-    public function __construct() {
-        $this->context = Context::getContext();
-        $this->context->controller = $this;
-        $this->bootstrap = true;
-
-        parent::__construct();
+    public function __construct(){        
+        $token = Tools::getAdminTokenLite('AdminModules');
+		parent::__construct();
+		if ($this->module->active)
+			Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules&token='.$token.'&configure=editablebanner&tab_module=administration&module_name=editablebanner',false));
     }
 }
