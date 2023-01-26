@@ -123,7 +123,7 @@ class EditableBanner extends Module
             array(
                 'banner_text' => $config['banner_text'],
                 'is_visible' => $config['is_visible']
-            ),
+            )
         );
         return $this->context->smarty->fetch($this->local_path.'views/templates/front/banner.tpl');
     }
@@ -199,8 +199,8 @@ class EditableBanner extends Module
                 ),
                 'submit' => array(
                     'title' => $this->l('Save'),
-                ),
-            ),
+                )
+            )
         );
     }
 
