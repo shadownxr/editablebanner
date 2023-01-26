@@ -29,7 +29,7 @@ class EditableBannerConfig extends ObjectModel {
         'primary' => 'id_banner',
         'fields' => array(
             'is_visible' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
-            'banner_text' => array('type' => self::TYPE_HTML, 'validate' => 'isString', 'required' => true, 'size' => 255)
+            'banner_text' => array('type' => self::TYPE_HTML, 'validate' => 'isString', 'required' => true, 'size' => 65535)
         )
     );
 }

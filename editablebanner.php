@@ -95,7 +95,7 @@ class EditableBanner extends Module
         $query = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'editablebannerconfig` (
             `id_banner` int(11) NOT NULL AUTO_INCREMENT,
             `is_visible` boolean NOT NULL,
-            `banner_text` varchar(255) NOT NULL,
+            `banner_text` TEXT NOT NULL,
             PRIMARY KEY (`id_banner`)
         ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
 
