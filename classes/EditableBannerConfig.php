@@ -22,14 +22,15 @@ if (!defined('_PS_VERSION_')) {
 class EditableBannerConfig extends ObjectModel {
     public $id_banner;
     public $is_visible = true;
-    public $banner_text = 'Sample Text';
+    public $banner_text;
 
     public static $definition = array(
         'table' => 'editablebannerconfig',
         'primary' => 'id_banner',
+        'multilang' => true,
         'fields' => array(
             'is_visible' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
-            'banner_text' => array('type' => self::TYPE_HTML, 'validate' => 'isString', 'required' => true, 'size' => 65535)
+            'banner_text' => array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isString', 'required' => true, 'size' => 65535)
         )
     );
 }

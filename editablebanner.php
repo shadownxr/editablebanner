@@ -92,37 +92,63 @@ class EditableBanner extends Module
     }
 
     public function installTable(){
-        $query = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'editablebannerconfig` (
+        $query = array();
+        $query[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'editablebannerconfig` (
             `id_banner` int(11) NOT NULL AUTO_INCREMENT,
             `is_visible` boolean NOT NULL,
-            `banner_text` TEXT NOT NULL,
             PRIMARY KEY (`id_banner`)
         ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
 
-        return Db::getInstance()->execute($query);
+        $query[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'editablebannerconfig_lang` (
+            `id_banner` int(11) NOT NULL AUTO_INCREMENT,
+            `id_lang` int(11) NOT NULL,
+            `banner_text` TEXT NOT NULL,
+            PRIMARY KEY (`id_banner`,`id_lang`)
+        ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
+
+        foreach($query as $q){
+            if(!Db::getInstance()->execute($q)){
+                return false;
+            }
+        }
+
+        return true;
     }
     
     public function uninstallTable(){
-        $query = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'editablebannerconfig`';
+        $query = array();
+        $query[] = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'editablebannerconfig`';
+        $query[] = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'editablebannerconfig_lang`';
 
-        return Db::getInstance()->execute($query);
+        foreach($query as $q){
+            if(!Db::getInstance()->execute($q)){
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function initTable(){
         $config = new EditableBannerConfig($this->id_config);
         $config->is_visible = true;
-        $config->banner_text = '<p>Sample Text</p>';
+        $languages = Language::getLanguages();
+
+        foreach($languages as $lang_id){
+            $config->banner_text[$lang_id['id_lang']] = '<p>Sample Text</p>';
+        }
 
         return (bool)$config->add();
     }
 
     public function hookDisplayBanner(){
-        $config = $this->getConfigValues();
+        $config = new EditableBannerConfig($this->id_config);
+        $curr_lang = $this->context->language->id;
 
         $this->context->smarty->assign(
             array(
-                'banner_text' => $config['banner_text'],
-                'is_visible' => $config['is_visible']
+                'banner_text' => $config->banner_text[$curr_lang],
+                'is_visible' => $config->is_visible,
             )
         );
         return $this->context->smarty->fetch($this->local_path.'views/templates/front/banner.tpl');
@@ -164,6 +190,16 @@ class EditableBanner extends Module
 
     protected function getConfigForm()
     {
+        $languages = Language::getLanguages();
+        $options = array();
+
+        foreach($languages as $language){
+            $options[] = array(
+                'id_options' => $language['id_lang'],
+                'name' => $language['language_code'],
+            );
+        }
+
         return array(
             'form' => array(
                 'legend' => array(
@@ -196,6 +232,16 @@ class EditableBanner extends Module
                         'name' => 'banner_text',
                         'autoload_rte' => 'rte',
                     ),
+                    array(
+                        'type' => 'select',
+                        'label' => $this->l('Language'),
+                        'name' => 'language',
+                        'options' => array(
+                            'query' => $options,
+                            'id' => 'id_options',
+                            'name' => 'name',
+                        ),
+                    ),
                 ),
                 'submit' => array(
                     'title' => $this->l('Save'),
@@ -208,20 +254,28 @@ class EditableBanner extends Module
     {
         $banner_text = Tools::getValue('banner_text');
         $is_visible = (bool)Tools::getValue('is_visible');
+        $language_id = (int)Tools::getValue('language');
 
         $config = new EditableBannerConfig($this->id_config);
-        $config->banner_text = $banner_text;
+
+        $config->banner_text[$language_id] = $banner_text;
         $config->is_visible = $is_visible;
 
-        $config->update();
+        if(Validate::isLoadedObject($config)){
+            $config->update();
+        } else {
+            $config->add();
+        }
     }
 
     private function getConfigValues(){
         $config = new EditableBannerConfig($this->id_config);
+        $curr_lang = $this->context->language->id;
 
         return array(
-            'banner_text' => $config->banner_text,
+            'banner_text' => $config->banner_text[$curr_lang],
             'is_visible' => $config->is_visible,
+            'language' => $curr_lang,
         );
     }
 }
