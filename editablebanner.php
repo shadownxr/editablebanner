@@ -233,7 +233,7 @@ class EditableBanner extends Module
                     ),
                     array(
                         'type' => 'select',
-                        'label' => $this->l('Languages'),
+                        'label' => $this->l('Language'),
                         'name' => 'language',
                         'options' => array(
                             'query' => $options,

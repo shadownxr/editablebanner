@@ -9,3 +9,4 @@ $_MODULE['<{editablebanner}prestashop>editablebanner_b746d65c7b78a77a29d7252dab3
 $_MODULE['<{editablebanner}prestashop>editablebanner_93cba07454f06a4a960172bbd6e2a435'] = 'Tak';
 $_MODULE['<{editablebanner}prestashop>editablebanner_bafd7322c6e97d25b6299b5d6fe8920b'] = 'Nie';
 $_MODULE['<{editablebanner}prestashop>editablebanner_fc3dcd88693fd14e779c7f26a5494229'] = 'Wpisz tekst banera';
+$_MODULE['<{editablebanner}prestashop>editablebanner_3a08e2e340ab29fd9263af48193cbf8e'] = 'Język';
