@@ -142,12 +142,13 @@ class EditableBanner extends Module
     }
 
     public function hookDisplayBanner(){
-        $config = $this->getConfigValues();
+        $config = new EditableBannerConfig($this->id_config);
+        $curr_lang = $this->context->language->id;
 
         $this->context->smarty->assign(
             array(
-                'banner_text' => $config['banner_text'],
-                'is_visible' => $config['is_visible']
+                'banner_text' => $config->banner_text[$curr_lang],
+                'is_visible' => $config->is_visible,
             )
         );
         return $this->context->smarty->fetch($this->local_path.'views/templates/front/banner.tpl');
@@ -269,8 +270,7 @@ class EditableBanner extends Module
 
     private function getConfigValues(){
         $config = new EditableBannerConfig($this->id_config);
-        $curr_lang = Language::getLanguages(true);
-        $curr_lang = (int)$curr_lang[0]['id_lang'];
+        $curr_lang = $this->context->language->id;
 
         return array(
             'banner_text' => $config->banner_text[$curr_lang],
